@@ -1,8 +1,6 @@
-DROP TABLE IF EXISTS entries;
+DROP TABLE IF EXISTS users;
 CREATE TABLE users (
-  UserID int NOT NULL AUTO_INCREMENT,
-  Username varchar(50) NOT NULL,
-  Password  varchar(500) NOT NULL,
-  UserID int DEFAULT NULL,
-  CONSTRAINT entries_pk PRIMARY KEY (EntryID)
+  UserID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  Username varchar(25) NOT NULL,
+  Password  varchar(25) NOT NULL
 );
