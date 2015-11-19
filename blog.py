@@ -105,10 +105,10 @@ def getEntries(username, page):
 		print 'THIS BROKE'
 
 	set = cursor.fetchall()
+	
 	entries = []
-
 	i = page-1 * 5
-	while(i < page*5-1):
+	while(i < page*5):
 		entries.append(set[i])
 		i+=1
 
@@ -120,10 +120,4 @@ def getEntries(username, page):
 	
 if __name__ == '__main__':
     app.run(port=5001, host='localhost', debug=True)
-=======
-@app.route('/blog/<string:username>/<int:page>')
-def getEntries():
-	return ''
 
-if __name__ == '__main__':
-    app.run(port=5000, host='localhost', debug=True)
