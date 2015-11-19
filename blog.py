@@ -24,7 +24,6 @@ def get_password(username):
 	#if the username is in the users table, return the password.
 	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
 	cursor = connection.cursor()
-	print 'testing'
 	query = "select Password from users where Username='%s'" %(username)
 
 	try:
@@ -34,7 +33,8 @@ def get_password(username):
 		return make_response(jsonify({'error':'Failed!'}),404)
 	
 	returned = cursor.fetchone()
-	
+	if returned[0] == '':
+		return none
 	return returned[0]
 
 
@@ -91,9 +91,18 @@ def blog():
 		username = auth.username()
 		entryID = request.json.get('entryID',"")
 
-		print username
-		print entryID
-		
+		connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba, use_unicode=True, charset='utf8')
+		cursor = connection.cursor()
+
+		query = "delete from entries where EntryID='%s' and User='%s'" %(entryID,username)
+		try: 
+			cursor.execute(query)
+		except:
+			return make_response(jsonify({'error':'Failed!'}),404)
+
+		cursor.close()
+		connection.close()
+		return make_response(jsonify({'error':'Success!'}),201)
 
 #Return entries by User each page will have 5 entries.
 @app.route('/blog/<username>/<int:page>')
