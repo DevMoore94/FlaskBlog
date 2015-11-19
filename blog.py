@@ -2,6 +2,7 @@
 from flask import Flask, jsonify, request,make_response
 from flask.ext.httpauth import HTTPBasicAuth
 import json
+import MySQLdb
 app = Flask(__name__)
 #create a temporary users table
 users = {"jtramley":"password"}
@@ -9,9 +10,9 @@ users = {"jtramley":"password"}
 #MySQL connection information.
 #host='localhost',user='jtramley',passwd='ckd9OY5fz',db='jtramley'
 hosta='localhost'
-usera='jtramley'
-passwda='ckd9OY5fz'
-dba='jtramley'
+usera='bmoore1'
+passwda='Q8vdnRru7'
+dba='bmoore1'
 
 
 #setup authentication process
@@ -72,8 +73,33 @@ def blog():
 
 	return 'under construction'
 
-@app.route('/blog/<string:username>/<int:page>')
-def getEntries:
+#Return entries by User each page will have 5 entries.
+@app.route('/blog/<username>/<int:page>')
+def getEntries(username, page):
+	
+	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
+	cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+	query = "select * from entries where User='%s'" %(username)
+
+	try:
+		cursor.execute(query)
+	except:
+	# 	Things messed up
+		print 'THIS BROKE'
+
+	set = cursor.fetchall()
+	entries = []
+
+	i = page-1 * 5
+	while(i < page*5-1):
+		entries.append(set[i])
+		i+=1
+
+
+	cursor.close()
+	connection.close()
+	return jsonify({'entry': entries})
+	
 	
 if __name__ == '__main__':
-    app.run(port=5000, host='localhost')
+    app.run(port=5001, host='localhost', debug=True)
