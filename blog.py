@@ -62,12 +62,10 @@ def login():
 	else:
 		return make_response(jsonify({'error':'Failed!'}),404)
 
-@app.route('/blog', methods=['POST'])
+@app.route('/blog', methods=['POST','DELETE'])
 @auth.login_required
 def blog():
 	if request.method == 'POST':
-
-
 		#for command line:
 		# curl -u jtramley:"password" -H "Content-Type: application/json"  -X POST -d '{"username":"jtramley", "title":"my first post", "content":"So this is my first blog "}' http://localhost:5000/blog
 		username = request.json.get('username',"")
@@ -88,7 +86,14 @@ def blog():
 		connection.close()
 
 		return make_response(jsonify({'error':'Success!'}),201)
+	
+	if request.method == 'DELETE':
+		username = auth.username()
+		entryID = request.json.get('entryID',"")
 
+		print username
+		print entryID
+		
 
 #Return entries by User each page will have 5 entries.
 @app.route('/blog/<username>/<int:page>')
@@ -119,5 +124,5 @@ def getEntries(username, page):
 	
 	
 if __name__ == '__main__':
-    app.run(port=5001, host='localhost', debug=True)
+    app.run(port=5000, host='localhost', debug=True)
 
