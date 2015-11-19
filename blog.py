@@ -2,7 +2,9 @@
 from flask import Flask, jsonify, request,make_response
 from flask.ext.httpauth import HTTPBasicAuth
 import json
+import MySQLdb
 app = Flask(__name__)
+
 #create a temporary users table
 users = {"jtramley":"password"}
 
@@ -20,10 +22,19 @@ auth = HTTPBasicAuth()
 @auth.get_password
 def get_password(username):
 	#if the username is in the users table, return the password.
-	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
-	cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+#	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
+#	cursor = connection.cursor()
+	print 'testing'
+#	query = "select Password from users where Username='%s'" %(username)
 
-	query = "select Password from users where Username='%s'" %(username)
+	#try:
+#		cursor.execute(query)
+	#except:
+	# 	Things messed up
+#		abort(404)
+	
+#	rv = cursor.fetchall()
+#	print 'var: '+rv+'\n'
 
 	if username in users:
 		return users.get(username)
@@ -53,27 +64,36 @@ def login():
 	else:
 		return make_response(jsonify({'error':'Failed!'}),404)
 
-@app.route('/blog', methods=['GET','POST'])
+@app.route('/blog', methods=['POST'])
+@auth.login_required
 def blog():
-	if request.method == 'GET':
-		#this is where we return all of the user's blog posts
-		return 'under construction'
-		auth.username
 	if request.method == 'POST':
-		#this is where we create a new post
+
 
 		#for command line:
-		# curl -u jtramley:"password" -H "Content-Type: application/json"  -X POST -d '{"username":"jtramley", "title":"my first post", "text":"So this is my first blog "}' http://localhost:5000/blog
-
+		# curl -u jtramley:"password" -H "Content-Type: application/json"  -X POST -d '{"username":"jtramley", "title":"my first post", "content":"So this is my first blog "}' http://localhost:5000/blog
 		username = request.json.get('username',"")
 		title = request.json.get('title',"")
-		text = request.json.get('text',"")
-		return text
+		content = request.json.get('content',"")
+		query = "insert into entries values(DEFAULT,'%s','%s','%s')" %(title,content,username)
 
-	return 'under construction'
+		connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba, use_unicode=True, charset='utf8')
+		cursor = connection.cursor()
+		
+		try:
+			cursor.execute(query)
+		except:
+		# 	Things messed up
+			return make_response(jsonify({'error':'Failed!'}),404)
+
+		cursor.close()
+		connection.close()
+
+		return make_response(jsonify({'error':'Success!'}),201)
 
 @app.route('/blog/<string:username>/<int:page>')
-def getEntries:
-	
+def getEntries():
+	return ''
+
 if __name__ == '__main__':
-    app.run(port=5000, host='localhost')
+    app.run(port=5000, host='localhost', debug=True)
