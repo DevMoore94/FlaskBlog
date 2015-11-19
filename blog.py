@@ -22,23 +22,21 @@ auth = HTTPBasicAuth()
 @auth.get_password
 def get_password(username):
 	#if the username is in the users table, return the password.
-#	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
-#	cursor = connection.cursor()
+	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
+	cursor = connection.cursor()
 	print 'testing'
-#	query = "select Password from users where Username='%s'" %(username)
+	query = "select Password from users where Username='%s'" %(username)
 
-	#try:
-#		cursor.execute(query)
-	#except:
-	# 	Things messed up
-#		abort(404)
+	try:
+		cursor.execute(query)
+	except:
+	 	#Things messed up
+		return make_response(jsonify({'error':'Failed!'}),404)
 	
-#	rv = cursor.fetchall()
-#	print 'var: '+rv+'\n'
+	returned = cursor.fetchone()
+	
+	return returned[0]
 
-	if username in users:
-		return users.get(username)
-	return None
 
 @auth.error_handler
 def unauthorized():
