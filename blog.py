@@ -112,16 +112,34 @@ def getEntries(username, page):
 	set = cursor.fetchall()
 	
 	entries = []
-	i = page-1 * 5
+	
+	i = (page-1) * 5
 	while(i < page*5):
 		entries.append(set[i])
 		i+=1
 
-
 	cursor.close()
 	connection.close()
 	return jsonify({'entry': entries})
-	
+
+#get entry by id
+@app.route('/blog/<int:postID>')
+def getPostById(postID):
+	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
+	cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+	query = "select * from entries where EntryID='%s'" %(postID)
+
+	try:
+		cursor.execute(query)
+	except:
+	# 	Things messed up
+		print 'THIS BROKE'
+
+	set = cursor.fetchall()
+
+	cursor.close()
+	connection.close()
+	return jsonify({'entry': set})
 	
 if __name__ == '__main__':
     app.run(port=5000, host='localhost', debug=True)
