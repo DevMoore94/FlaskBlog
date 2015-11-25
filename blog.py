@@ -3,8 +3,9 @@ from flask import Flask, jsonify, request,make_response
 from flask.ext.httpauth import HTTPBasicAuth
 import json
 import MySQLdb
+from flask.ext.cors import CORS
 app = Flask(__name__)
-
+CORS(app)
 #create a temporary users table
 users = {"jtramley":"password"}
 
@@ -151,5 +152,5 @@ def getPostById(postID):
 	return jsonify({'entry': set})
 	
 if __name__ == '__main__':
-    app.run(port=5000, host='localhost', debug=True)
+    app.run(host='info3103.cs.unb.ca', port=0447+1024, debug=True)
 
