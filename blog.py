@@ -69,7 +69,7 @@ def blog():
 	if request.method == 'POST':
 		#for command line:
 		# curl -u jtramley:"password" -H "Content-Type: application/json"  -X POST -d '{"username":"jtramley", "title":"my first post", "content":"So this is my first blog "}' http://localhost:5000/blog
-		username = request.json.get('username',"")
+		username = auth.username()
 		title = request.json.get('title',"")
 		content = request.json.get('content',"")
 		query = "insert into entries values(DEFAULT,'%s','%s','%s')" %(title,content,username)
