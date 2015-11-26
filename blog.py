@@ -124,9 +124,11 @@ def getEntries(username, page):
 	entries = []
 	
 	i = (page-1) * 5
-	while(i < page*5):
+	while(i < page*5 and i < len(set)):
+		
 		entries.append(set[i])
 		i+=1
+
 
 	cursor.close()
 	connection.close()
@@ -150,6 +152,7 @@ def getPostById(postID):
 	cursor.close()
 	connection.close()
 	return jsonify({'entry': set})
+
 	
 if __name__ == '__main__':
     app.run(host='info3103.cs.unb.ca', port=0447+1024, debug=True)
