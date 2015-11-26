@@ -34,14 +34,18 @@ def get_password(username):
 		return make_response(jsonify({'error':'Failed!'}),404)
 	
 	returned = cursor.fetchone()
+	#if the username was wrong
+	if (cursor.rowcount == 0):
+		return make_response(jsonify({'error':'Bad username'}),403)
 	if returned[0] == '':
 		return none
 	return returned[0]
 
 
+
 @auth.error_handler
 def unauthorized():
-	return make_response(jsonify({'error':'Bad username or passowrd.'}),403)
+	return make_response(jsonify({'error':'Bad username or password.'}),403)
 
 # Some error handlers
 
@@ -155,5 +159,5 @@ def getPostById(postID):
 
 	
 if __name__ == '__main__':
-    app.run(host='info3103.cs.unb.ca', port=0447+1024, debug=True)
+    app.run(host='info3103.cs.unb.ca', port=1419, debug=True)
 

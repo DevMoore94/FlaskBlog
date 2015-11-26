@@ -25,14 +25,30 @@
 	// 	  }
 	// 	});
 	// });
-		
+		$("#authForm").on("submit", function (e) {
+   			e.preventDefault();
+		});
+		function checkInput(){
+			entryData = $('#entryTitle').val();
+			titleData = $('#entryBody').val();
+
+			if (entryData == '' || titleData == ''){
+				alert('You need to enter both a title and a body for your entry.');
+			}
+			else {
+				$('#myModal').modal('toggle');
+			}
+		}
 		function buttonPush(){
-		$.ajax
+			//popup to get login information
+
+			//send the ajax request
+			$.ajax
 			({
 				type: "POST",
-			  url: "http://info3103.cs.unb.ca:1319/blog",
+			  url: "http://info3103.cs.unb.ca:1419/blog",
 			  beforeSend: function(xhr) { 
-      			xhr.setRequestHeader("Authorization", "Basic " + btoa("jtramley:password")); 
+      			xhr.setRequestHeader("Authorization", "Basic " + btoa($('#username').val() + ":" + $('#password').val())); 
    			  },
 			  dataType: 'json',
 			  contentType: 'application/json',
@@ -40,11 +56,23 @@
 			  xhrFields: {
 			  	"Access-Control-Allow-Origin": "true"
 			  },
-			  data: '{ "content":"'+ $('#entryBody').val() + '","title": "' + $('#entryTitle').val() + '","username": "bmoore1"}',
+			  data: '{ "content":"'+ entryData + '","title": "' + titleData + '"}',
 			  success: function (){
 			    alert('Thank you for your Blog entry'); 
+			    //close the modal
+				$('#myModal').modal('toggle');
+			  },
+			  error: function(){
+			  	$('#password').addClass('alert');
+			  	$('#myModal').modal('show');
 			  }
 			});
+			//remove the text from the form
+			$('#entryTitle').val('');
+			$('#entryBody').val('');
+			//hide the form.
+			$('#postForm').addClass('hidden');
+			
 
 		} 
 
@@ -135,7 +163,11 @@
 		    <textarea class="form-control" id="entryBody" rows="6" placeholder="Fill in entry text..."></textarea>
 		  </div>
 		  <!-- Trigger the modal with a button -->
-		   <button type="button" class="btn btn-default" onclick="buttonPush()" data-toggle="modal" data-target="#myModal">Submit</button>
+<<<<<<< HEAD
+		  
+=======
+		   <button type="button" class="btn btn-default"   onClick="checkInput()">Submit</button>
+>>>>>>> 9484cac79dbf497b81cdbf6a94fef59af95f9254
 
 			<!-- Modal -->
 			<div id="myModal" class="modal fade" role="dialog">
@@ -147,17 +179,24 @@
 			        <button type="button" class="close" data-dismiss="modal">&times;</button>
 			        <h4 class="modal-title">Modal Header</h4>
 			      </div>
-			     <form id="postForm" class="hidden">
+<<<<<<< HEAD
+
+=======
+			     <form id="authForm" class="hidden">
+>>>>>>> 9484cac79dbf497b81cdbf6a94fef59af95f9254
 				  <div class="form-group">
 				    <label for="entryTitle">Username</label>
 				    <input type="text" class="form-control" id="username" >
 				  </div>
 				  <div class="form-group">
 				    <label for="entryBody">Password</label>
-				   <input type="text" class="form-control" id="password" >
+<<<<<<< HEAD
+=======
+				   <input type="password" class="form-control" id="password" >
 				  </div>
 			      <div class="modal-footer">
-			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			        <button type="button" class="btn btn-default"  onclick="buttonPush()">Authorize</button>
+>>>>>>> 9484cac79dbf497b81cdbf6a94fef59af95f9254
 			      </div>
 			    </div>
 			  </div>
