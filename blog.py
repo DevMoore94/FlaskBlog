@@ -159,5 +159,5 @@ def getPostById(postID):
 
 	
 if __name__ == '__main__':
-    app.run(host='info3103.cs.unb.ca', port=1419, debug=True)
+    app.run(host='info3103.cs.unb.ca', port=1319, debug=True)
 
