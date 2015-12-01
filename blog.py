@@ -100,15 +100,25 @@ def blog():
 		connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba, use_unicode=True, charset='utf8')
 		cursor = connection.cursor()
 
-		query = "delete from entries where EntryID='%s' and User='%s'" %(entryID,username)
+		query = "select * from entries where EntryID='%s' and User='%s'" %(entryID,username)
+
 		try: 
 			cursor.execute(query)
 		except:
-			return make_response(jsonify({'error':'Failed!'}),404)
+			return make_response(jsonify({'error':'Failed!'}),500)
 
-		cursor.close()
-		connection.close()
-		return make_response(jsonify({'error':'Success!'}),201)
+		if (cursor.rowcount != 0):
+			query = "delete from entries where EntryID='%s' and User='%s'" %(entryID,username)
+			try: 
+				cursor.execute(query)
+			except:
+				return make_response(jsonify({'error':'Failed!'}),500)
+			
+			cursor.close()
+			connection.close()
+			return make_response(jsonify({'error':'Success!'}),201)
+		else:
+			return make_response(jsonify({'error':'Failed!'}),403)
 
 #Return entries by User each page will have 5 entries.
 @app.route('/blog/<username>/<int:page>')
