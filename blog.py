@@ -26,6 +26,7 @@ def get_password(username):
 	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
 	cursor = connection.cursor()
 	query = "select Password from users where Username='%s'" %(username)
+	#query = "getPassword('%s')" %(username)
 
 	try:
 		cursor.execute(query)
@@ -36,9 +37,9 @@ def get_password(username):
 	returned = cursor.fetchone()
 	#if the username was wrong
 	if (cursor.rowcount == 0):
-		return make_response(jsonify({'error':'Bad username'}),403)
+		return None 
 	if returned[0] == '':
-		return none
+		return None
 	return returned[0]
 
 
@@ -76,7 +77,7 @@ def blog():
 		username = auth.username()
 		title = request.json.get('title',"")
 		content = request.json.get('content',"")
-		query = "insert into entries values(DEFAULT,'%s','%s','%s')" %(title,content,username)
+		query = "insert into entries values(DEFAULT,'%s','%s','%s',DEFAULT)" %(title,content,username)
 
 		connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba, use_unicode=True, charset='utf8')
 		cursor = connection.cursor()
