@@ -1,0 +1,20 @@
+textarea {
+   resize: none;
+}
+
+.navbar{
+	background-color: #3399ff;
+}
+
+.navbar-default .navbar-brand {
+    color: black;
+}
+
+body{
+background-color: #e6e6e6;
+}
+
+.entryDisplay{
+	border-style: solid;
+	
+}
