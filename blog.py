@@ -86,7 +86,7 @@ def blog():
 			cursor.execute(query)
 		except:
 		# 	Things messed up
-			return make_response(jsonify({'error':'Failed!'}),404)
+			return make_response(jsonify({"error":"Database Connection failure"}),500)
 
 		cursor.close()
 		connection.close()
@@ -105,14 +105,14 @@ def blog():
 		try: 
 			cursor.execute(query)
 		except:
-			return make_response(jsonify({'error':'Failed!'}),500)
+			return make_response(jsonify({"error":"Database Connection failure"}),500)
 
 		if (cursor.rowcount != 0):
 			query = "delete from entries where EntryID='%s' and User='%s'" %(entryID,username)
 			try: 
 				cursor.execute(query)
 			except:
-				return make_response(jsonify({'error':'Failed!'}),500)
+				return make_response(jsonify({"error":"Database Connection failure"}),500)
 			
 			cursor.close()
 			connection.close()
@@ -132,8 +132,8 @@ def getEntries(username, page):
 		cursor.execute(query)
 	except:
 	# 	Things messed up
-		print 'THIS BROKE'
-
+		return make_response(jsonify({"error":"Database Connection failure"}),500)
+		
 	set = cursor.fetchall()
 	
 	entries = []
@@ -160,7 +160,7 @@ def getPostById(postID):
 		cursor.execute(query)
 	except:
 	# 	Things messed up
-		print 'THIS BROKE'
+		return make_response(jsonify({"error":"Database Connection failure"}),500)
 
 	set = cursor.fetchall()
 
@@ -180,7 +180,7 @@ def comments(entryID):
 		cursor.execute(query)
 	except:
 	# 	Things messed up
-		print 'THIS BROKE'
+		return make_response(jsonify({"error":"Database Connection failure"}),500)
 	set = cursor.fetchall()
 
 	cursor.close()
