@@ -5,7 +5,7 @@ CREATE PROCEDURE checkLogin(IN usernameIn varchar(25))
 BEGIN
    SELECT Password 
       FROM users
-      WHERE Username = usernameIn;
+      WHERE username = usernameIn;
       
       
 END//

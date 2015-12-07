@@ -1,7 +1,7 @@
 DELIMITER //
 DROP PROCEDURE IF EXISTS getEntryByUser // 
 
-CREATE PROCEDURE getEntryByUser(IN usernameIn varchar(25))
+CREATE PROCEDURE getEntryByUser(IN usernameIn varchar)
 BEGIN
    SELECT * 
       FROM entries

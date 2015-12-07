@@ -5,7 +5,7 @@ CREATE PROCEDURE deleteEntry(IN entryId int,IN usernameIn varchar(25))
 BEGIN
    DELETE 
       FROM entries
-      WHERE EntryID = entryId
+      WHERE EntryID = entryId;
       AND User = usernameIn;
       
 END//
