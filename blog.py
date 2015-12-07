@@ -168,7 +168,62 @@ def getPostById(postID):
 	connection.close()
 	return jsonify({'entry': set})
 
+@app.route('/comment/<int:entryID>', methods=['GET'])
+def comments(entryID):
+	#example CURL
+	#curl  -i http://info3103.cs.unb.ca:1319/comment/1
+	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
+	cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+	query = "select * from comments where EntryID='%s'" %(entryID)
+
+	try:
+		cursor.execute(query)
+	except:
+	# 	Things messed up
+		print 'THIS BROKE'
+	set = cursor.fetchall()
+
+	cursor.close()
+	connection.close()
+	return jsonify({'comment': set})
+
+@app.route('/comment', methods=['POST'])
+@auth.login_required
+def postComment():
+	#Example CURL
+	#curl -u jtramley:"password" -H "Content-Type: application/json" -X POST -d '{"content":"This is a baaaaaaaad comment","EntryID":"1"}' http://info3103.cs.unb.ca:1319/comment
+	username = auth.username()
+	content = request.json.get('content',"")
+	entryID = request.json.get('EntryID',"")
+
 	
+	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
+	cursor = connection.cursor();
+
+	query = "insert into comments values(DEFAULT,'%s','%s','%s')" %(entryID,content,username)
+
+	try:
+		cursor.execute(query)
+	except:
+		return make_response(jsonify({"error":"Database Connection failure"}),500)
+
+	return make_response(jsonify({"success":"Post successful"}),201)
+@app.route('/comment/<int:commentID>', methods=['DELETE'])
+@auth.login_required
+def deleteComment(commentID):
+	#example CURL
+	#curl -u jtramley:"password" -X DELETE http://info3103.cs.unb.ca:1319/comment/2
+	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
+	cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+	query = "delete from comments where CommentID='%s'" %(commentID)
+
+	try:
+		cursor.execute(query)
+	except:
+	# 	Things messed up
+		print make_response(jsonify({"error":"Database Connection failure"}),500)
+
+	return make_response(jsonify({"success":"Delete successful"}),201)
 if __name__ == '__main__':
     app.run(host='info3103.cs.unb.ca', port=1319, debug=True)
 
