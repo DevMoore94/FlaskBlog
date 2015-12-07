@@ -28,8 +28,8 @@
 		          //popup to get login information
 		
 		          //send the ajax request
-		          entryData = $('#entryContent').val();
-		          titleData = $('#entryTitle').val();
+		          entryData = encodeURIComponent($('#entryContent').val());
+		          titleData = encodeURIComponent($('#entryTitle').val());
 		          $.ajax({
 		              type: "POST",
 		              url: "http://info3103.cs.unb.ca:1319/blog",
@@ -146,8 +146,8 @@
 			  	var i=0;
 			  	while( i < data.entry.length){
 				//$('#entryDisplay').text(data.entry[0].Content);
-				$( "#dataDisplay" ).append($( "<br><a class='close' id="+JSON.stringify(data.entry[i].EntryID).replace(/['"]+/g, '')+" onclick='predelete(this.id);'>&times;</a> <h3 class='entryDisplay' id='entryDisplay" + i +"'> " + JSON.stringify(data.entry[i].Title).replace(/['"]+/g, '') + "</h3>  <br>"));
-				$( "#dataDisplay" ).append($( "<p class='entryDisplay' id='entryDisplay" + i +"'> " + JSON.stringify(data.entry[i].Content).replace(/['"]+/g, '') + "</p><br>"));
+				$( "#dataDisplay" ).append($( "<br><a class='close' id="+JSON.stringify(data.entry[i].EntryID).replace(/['"]+/g, '')+" onclick='predelete(this.id);'>&times;</a> <h3 class='entryDisplay' id='entryDisplay" + i +"'> " + decodeURIComponent(JSON.stringify(data.entry[i].Title).replace(/['"]+/g, '')) + "</h3>  <br>"));
+				$( "#dataDisplay" ).append($( "<p class='entryDisplay' id='entryDisplay" + i +"'> " + decodeURIComponent(JSON.stringify(data.entry[i].Content).replace(/['"]+/g, '')) + "</p><br>"));
 					
 					//$('#entryDisplay').text(JSON.stringify(data.entry[i].Content));
 					i = i + 1;

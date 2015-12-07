@@ -74,16 +74,20 @@ def blog():
 	if request.method == 'POST':
 		#for command line:
 		# curl -u jtramley:"password" -H "Content-Type: application/json"  -X POST -d '{"username":"jtramley", "title":"my first post", "content":"So this is my first blog "}' http://localhost:5000/blog
+		
 		username = auth.username()
 		title = request.json.get('title',"")
+		print 'got title'
 		content = request.json.get('content',"")
+		print 'gpt content'
 		query = "insert into entries values(DEFAULT,'%s','%s','%s',DEFAULT)" %(title,content,username)
-
+		print 'request parsed'
 		connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba, use_unicode=True, charset='utf8')
 		cursor = connection.cursor()
-		
+		print 'connection created'
 		try:
 			cursor.execute(query)
+			print 'executed query'
 		except:
 		# 	Things messed up
 			return make_response(jsonify({"error":"Database Connection failure"}),500)
@@ -126,7 +130,7 @@ def getEntries(username, page):
 	
 	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
 	cursor = connection.cursor(MySQLdb.cursors.DictCursor)
-	query = "select * from entries where User='%s'" %(username)
+	query = "call getEntryByUser('%s')" %(username)
 
 	try:
 		cursor.execute(query)
@@ -148,25 +152,6 @@ def getEntries(username, page):
 	cursor.close()
 	connection.close()
 	return jsonify({'entry': entries})
-
-#get entry by id
-@app.route('/blog/<int:postID>')
-def getPostById(postID):
-	connection = MySQLdb.connect(host=hosta,user=usera,passwd=passwda,db=dba)
-	cursor = connection.cursor(MySQLdb.cursors.DictCursor)
-	query = "select * from entries where EntryID='%s'" %(postID)
-
-	try:
-		cursor.execute(query)
-	except:
-	# 	Things messed up
-		return make_response(jsonify({"error":"Database Connection failure"}),500)
-
-	set = cursor.fetchall()
-
-	cursor.close()
-	connection.close()
-	return jsonify({'entry': set})
 
 if __name__ == '__main__':
     app.run(host='info3103.cs.unb.ca', port=1319, debug=True)
